@@ -10,8 +10,9 @@ public class StringCalculator {
     System.out.println("\n2) Test delimitatore di default: " + add("1,2"));
     System.out.println("\n3) Test controllo numeri switch numeri superiori a 1000: " + add("1001,2"));
     System.out.println("\n4) Test delimitatore personalizzato (-): " + add("//[|]//1|2|3"));
-    System.out.println("\n5) Test doppio delimitatore personalizzato (--) " + add("//[--]//1--3--6"));
-    System.out.println("\n5) Test doppio delimitatore () " + add("//[/][*]//1/3*6"));
+    System.out.println("\n5) Test delimitatore personalizzato doppio (--) " + add("//[--]//1--3--6"));
+    System.out.println("\n6) Test doppio delimitatore unico ( [/][*] ) " + add("//[/][*]//2/3*6"));
+    System.out.println("\n7) Test doppio delimitatore doppio ( [//][**] ) " + add("//[//][**]//2//4**6"));
   }
 
   /**
@@ -34,10 +35,11 @@ public class StringCalculator {
     // con "Pattern.compile" definisco un modello di ricerca (praticamente è
     // "regex")
     // Ricorda: vedi significato degli scomparti di regex.
-    Matcher matcher = Pattern.compile("//\\[([^]]+)]//(.*)").matcher(input);
+    Matcher matcher = Pattern.compile("//((?:\\[[^\\]]+])+)//(.*)").matcher(input);
     if (matcher.matches()) {
       String[] delimiters = matcher.group(1).split("\\]\\[");
-      delimiter = Arrays.stream(delimiters).map(Pattern::quote).collect(Collectors.joining("|"));
+      delimiter = Arrays.stream(delimiters).map(d -> Pattern.quote(d.replace("[", "").replace("]", "")))
+          .collect(Collectors.joining("|"));
       input = matcher.group(2);
     }
 
