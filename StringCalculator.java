@@ -15,7 +15,7 @@ public class StringCalculator {
   /**
    * 
    * @param input
-   * Il metodo copre tutti i casi di test previsti nell'assegnazione
+   * Il metodo copre tutti i casi di test previsti nell'assegnazione.
    * @return int result
    */
   public static int add(String input) {
