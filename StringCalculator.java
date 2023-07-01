@@ -34,8 +34,8 @@ public class StringCalculator {
     // (regex) e stringa di input
     // con "Pattern.compile" definisco un modello di ricerca (praticamente è
     // "regex")
-    // Ricorda: vedi significato degli scomparti di regex.
-    Matcher matcher = Pattern.compile("//((?:\\[[^\\]]+])+)//(.*)").matcher(input);
+    // SOTTO: descrizione degli scomparti di regex.
+    Matcher matcher = Pattern.compile("//((?:\\[[^\\]]+\\])+)//(.*)").matcher(input);
     if (matcher.matches()) {
       String[] delimiters = matcher.group(1).split("\\]\\[");
       delimiter = Arrays.stream(delimiters).map(d -> Pattern.quote(d.replace("[", "").replace("]", "")))
@@ -58,3 +58,26 @@ public class StringCalculator {
     return result;
   }
 }
+
+// ** FUNZIONAMENTO DEL PATTERN **
+
+// java.util.regex --> fornisce supporto per le espressioni regolari. Gli oggettti Matcher e Pattern fanno entrambi parte del pacchetto. Mentre Prattern rappresenta un'espressione regolare che viene compilata, l'oggetto Matcher è uno strumento per la ricerca di quella espressione all'interno di una stringa.
+
+// ** ESPRESSIONE REGOLARE X ASSEGNAZIONE **
+
+// * // ..... // * --> cerco i doppi slash all'interno dell'input
+// * ( ....... ) * --> primo gruppo di cattura. Il gruppo di cattura fotografa una parte della stringa di input che corrisponde all'espressione regolare al suo interno
+// * (?: ...... ) * --> gruppo non catturante. Nel primo gruppo di cattura è inserito un gruppo non catturante. In questo caso (cioè nel caso di un gruppo non catturante all'interno di un gruppo di cattura) il gruppo non catturante mi serve per costuire la sequenza di caratteri che formerà il mio delimitatore personalizzato.
+// * (?: \\[ ......\\]) * --> con l'escape dell'escape delle quadre. In questo modo rimuovo il significato speciale attribuito alle quadre all'interno di un'espressione regolare.
+// * [^\\]] * --> con le quadre esterne, aventi il loro significato speciale all'interno del regex, posso raggruppare tutti i caratteri possibili che saranno parte della sequenza del delimitatore. NB con ^\\] intendo: tutti i caratteri tranne la quadra di chiusura (che preceduta dai \\ è svuotata del suo significato speciale. Fa quindi riferimento alla stringa di input)
+// * ((?: \\[[^\\]]+\\])) * --> con il + in quella posizione intendo dire: tutte le occorrenze dei caratteri interni al delimitatore. Questo permette di gestire più caratteri all'interno del delimitatore.
+// * ((?: \\[[^\\]]+\\])+) * --> con il + in seconda posizione faccio riferimento al gruppo non catturante, qundi all'intera sequenza [delim]. Quello che segnalo è la possibilità di più occorrenze della sequenza del delimitatore. Questo permette di gestire input con più delimitatori personalizzati, come //[*][%]\n1*2%3, dove * e % sono entrambi delimitatori.
+// * //((?:\\[[^\\]]+\\])+)// * --> cerco i doppi slash che chiudono la sequenza del delimitatore. Questi slash sono quelli che seguono immediatamente la sequenza del delimitatore.
+// * //((?:\\[[^\\]]+\\])+)//(.*) * --> con (.*) creo un secondo gruppo di cattura e fotografo tutto ciò che segue i doppi slash di chiusura. Questo sarà il resto della stringa di input da elaborare, cioè la stringa di numeri da sommare.
+// * .* * --> Il punto . in un'espressione regolare corrisponde a qualsiasi carattere singolo, ad eccezione dei caratteri di fine riga. Quindi, in pratica, punto . è un segnaposto che dice "qualsiasi carattere può andare qui".
+// * .* * --> L'asterisco * in un'espressione regolare significa "zero o più |OCCORRENZE DEL CARATTERE| o del gruppo precedente". Quindi, .* insieme significa "zero o più occorrenze di qualsiasi carattere", che è un modo per catturare il resto della stringa, indipendentemente da ciò che contiene.
+
+
+
+
+
