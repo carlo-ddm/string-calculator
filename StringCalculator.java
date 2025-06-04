@@ -77,6 +77,11 @@ public class StringCalculator {
 // * .* * --> Il punto . in un'espressione regolare corrisponde a qualsiasi carattere singolo, ad eccezione dei caratteri di fine riga. Quindi, in pratica, punto . è un segnaposto che dice "qualsiasi carattere può andare qui".
 // * .* * --> L'asterisco * in un'espressione regolare significa "zero o più |OCCORRENZE DEL CARATTERE| o del gruppo precedente". Quindi, .* insieme significa "zero o più occorrenze di qualsiasi carattere", che è un modo per catturare il resto della stringa, indipendentemente da ciò che contiene.
 
+// * In sintesi l'espressione completa //((?:\\[[^\\]]+\\])+)//(.*) individua
+//   uno o più delimitatori personalizzati racchiusi tra parentesi quadre e,
+//   attraverso il secondo gruppo di cattura, restituisce la parte della stringa
+//   che contiene i numeri da processare.
+
 
 
 
